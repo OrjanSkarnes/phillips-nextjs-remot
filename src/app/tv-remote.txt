@@ -1,0 +1,2 @@
+cd C:\path\to\project
+npm run dev

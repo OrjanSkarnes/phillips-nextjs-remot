@@ -10,28 +10,31 @@ export async function GET(request: Request) {
 }
 
 export async function POST(request: Request) {
+  logger.info("POST /api/ambilight");
   const req = await request.json();
-  logger.info("Switching source to the" + req.direction);
-  const directionIsRight = req.direction === "right";
-  try {
-    // logger.info("Switching source right" + req.body);
-    await philipsAPI.sendKey("Source");
-    await new Promise((resolve) => setTimeout(resolve, 1000)); // wait for the source menu to open
-    await philipsAPI.sendKey(directionIsRight ? "CursorRight" : "CursorLeft");
-    await new Promise((resolve) => setTimeout(resolve, 1000)); // wait for the selection to move
-    await philipsAPI.sendKey("Confirm");
-
-    logger.info('Switched source')
+  if (!!req.power) {
+    logger.info("Setting power to " + req.power);
+    return await philipsAPI.setAmbilightPower(req.power).then((res: any) => {
+      logger.info("Ambilight power set" + res.data);
+      return NextResponse.json({status: "OK"}, {
+        status: 200,
+      });
+    }).catch((error:any) => {
+      logger.error("Failed to set ambilight power" + error);
+      return NextResponse.json({error: "Failed to set ambilight power"}, {
+        status: 500,
+      });
+    });
+  }
+  return await philipsAPI.setAmbilight(req.styleName, req.menuSetting).then((res) => {
+    logger.info("Ambilight set" + res.data);
     return NextResponse.json({status: "OK"}, {
       status: 200,
     });
-  } catch (error: any) {
-    logger.error(`Failed to switch source, Are you sure the TV is on?`);
-    return NextResponse.json({error: `Failed to switch source, Are you sure the TV is on?`}, {
+  }).catch((error) => {
+    logger.error("Failed to set ambilight" + error);
+    return NextResponse.json({error: "Failed to set ambilight"}, {
       status: 500,
-    })
-  }
-  return NextResponse.json({status: "OK"}, {
-        status: 200,
-      });
+    });
+  });
 }

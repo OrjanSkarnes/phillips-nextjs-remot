@@ -1,5 +1,5 @@
 
-import styles from './page.module.css'
+import styles from './page.module.scss'
 import TVRemote from "@/app/components/TVRemote";
 
 export default function Home() {
