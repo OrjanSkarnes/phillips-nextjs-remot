@@ -13,6 +13,7 @@
   color: #fff;
 
   button {
+    box-sizing: border-box;
     margin: 5px;
     padding: 10px;
     border: none;
@@ -38,7 +39,7 @@
   }
 
   .power-button {
-    @include add-mask-icon(50px, url('icons/power.svg'), red);
+    @include add-mask-icon(40px, url('icons/power.svg'), red);
   }
 
   .top-container {
@@ -56,7 +57,7 @@
   }
 
   .home-back-control {
-    max-width: 80%;
+    max-width: var(--max-width);
 
     button {
       width: max-content;
@@ -76,7 +77,7 @@
   }
 
   .middle-row {
-    max-width: 80%;
+    max-width: var(--max-width);
   }
 
   // Volume Control
@@ -88,12 +89,11 @@
     .progress-bar {
       max-width: 100%;
       width: 500px;
-
-      height: 20px;  /* Adjust the height as per your requirements */
-      background-color: #ddd;
-      border-radius: 4px;
+      height: 30px;  /* Adjust the height as per your requirements */
+      background-color: var(--button-background);
+      border-radius: 15px;
       overflow: hidden;
-      margin-block: 10px;
+      margin-inline: 10px;
     }
 
     .progress {
@@ -101,14 +101,18 @@
       background-color: #4caf50;  /* Change the color to suit your design */
       height: 100%;
       transition: height 0.3s ease-in-out;
+
+      &.muted {
+        background-color: red;
+      }
     }
 
     .plus-button {
-        @include add-mask-icon(30px, url('icons/plus.svg'), var(--icon-color));
+        @include add-mask-icon(20px, url('icons/plus.svg'), var(--icon-color));
     }
 
     .minus-button {
-        @include add-mask-icon(30px, url('icons/minus.svg'), var(--icon-color));
+        @include add-mask-icon(20px, url('icons/minus.svg'), var(--icon-color));
     }
   }
 
@@ -123,10 +127,15 @@
       .prev-source-button {
         @include add-mask-icon(40px, url('icons/prev-source.svg'), var(--icon-color));
       }
+    }
+  
 
-      .source-button {
-        @include add-mask-icon(40px, url('icons/source.svg'), var(--icon-color));
-      }
+    .source-button {
+      @include add-mask-icon(40px, url('icons/source.svg'), var(--icon-color));
+    }
+
+    .light-button {
+      @include add-mask-icon(40px, url('icons/light.svg'), var(--icon-color));
     }
 
   .navigation-control {
@@ -135,7 +144,7 @@
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 5px;
-    max-width: 80%;
+    max-width: var(--max-width);
 
     button:nth-child(1),
     button:nth-child(5) {
@@ -177,12 +186,32 @@
     background-color: #404040;
     color: #fff;
     border: none;
-    border-radius: 05px;
+    border-radius: 15px;
     min-width: 160px;
     box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
     padding: 12px 16px;
-    z-index: 1;
-    text-indent: 1em;
-    line-height: 2em;
+    margin: 5px;
+    height: 60px;
+    box-sizing: border-box;
+
+    // Text modern style
+    font-size: 16px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    text-align: center;
+
+    // Add overflow and ellipsis
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .bottom-row {
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    max-width: var(--max-width);
   }
 }

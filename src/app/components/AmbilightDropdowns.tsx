@@ -6,6 +6,7 @@ type AmbilightSetting = {
   power?: string;
   isExpert?: string;
   menuSetting?: string;
+  icon?: string;
 };
 
 type AmbilightOptions = {
@@ -123,7 +124,7 @@ const ambilightOptions: AmbilightOptions = {
         styleName: "FOLLOW_COLOR",
         isExpert: "false",
         menuSetting: "DEEP_WATER",
-    },
+      },
 };
 
 const AmbilightDropdown: React.FC = () => {
@@ -143,14 +144,19 @@ const AmbilightDropdown: React.FC = () => {
     }
   };
 
+  const selectedIcon = selectedOption && ambilightOptions[selectedOption].icon;
+
+
   return (
+    <>  
     <select value={selectedOption} className="dropdown" onChange={handleChange}>
       {Object.keys(ambilightOptions).map((option) => (
         <option key={option} value={option} className="dropdown-content">
-          {option}
+          {option.replace('ambilight_', '').replace(/_/g, ' ').toUpperCase()}
         </option>
       ))}
     </select>
+    </>
   );
 };
 

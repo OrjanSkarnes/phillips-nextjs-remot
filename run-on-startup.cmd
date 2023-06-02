@@ -1,2 +1,2 @@
-cd C:\DevStuff\remote-tv
+cd C:\Dev\phillips-nextjs-remot
 npm run dev

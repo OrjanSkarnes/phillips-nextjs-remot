@@ -2,19 +2,28 @@
 
 import axios from "axios";
 import AmbilightDropdown from "./AmbilightDropdowns";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 
 const TVRemote = () => {
   const [currentVolume, setCurrentVolume] = useState<number>(0);
   const [isMuted, setIsMuted] = useState<boolean>(false);
 
+  // On startup, get the current volume and mute state
+  useEffect(() => {
+    getVolume();
+  }, []);
+
   async function handleButtonClick(command: string) {
-    console.log(`Sending ${command} command to TV`);
     const response = await axios.post(`/api/key`, {command});
-    if (command === "VolumeUp" || command === "VolumeDown") {
-      setCurrentVolume(response.data.volume);
-      setIsMuted(response.data.muted);
+    if (command === "VolumeUp" || command === "VolumeDown" || command === "Mute") {
+      getVolume();
     }
+  }
+
+  async function getVolume() {
+    const response = await axios.get(`/api/volume`);
+    setCurrentVolume(response.data.volume);
+    setIsMuted(response.data.muted);
   }
 
   async function getPowerState() {
@@ -32,7 +41,6 @@ const TVRemote = () => {
 
         <div className="source-control">
           <button onClick={() => swapSource("left")}><span className="prev-source-button"></span></button>
-          <button onClick={() => handleButtonClick("Source")}><span className="source-button"></span></button>
           <button onClick={() => swapSource("right")}><span className="next-source-button"></span></button>
         </div>
       </div>
@@ -48,22 +56,26 @@ const TVRemote = () => {
       <div className="home-back-control">
         <button onClick={() => handleButtonClick("Back")}><span className="back-button"></span></button>
         <button onClick={() => handleButtonClick("Home")}><span className="home-button"></span></button>
-        <button onClick={() => handleButtonClick("Options")}><span className="settings-button"></span></button>
+        <button onClick={() => handleButtonClick("Source")}><span className="source-button"></span></button>
+        {/* <button onClick={() => handleButtonClick("Options")}><span className="settings-button"></span></button> */}
       </div>
 
       <div className="middle-row">
         <div className="volume-control">
           <button onClick={() => handleButtonClick("VolumeDown")}><span className="minus-button"></span></button>
-          <div className="progress-bar">
-            <div className="progress" onClick={() => handleButtonClick("Mute")} style={{ width: `${currentVolume}%` }}></div>
+          <div className="progress-bar" onClick={() => handleButtonClick("Mute")} >
+            <div className={"progress " + (isMuted? 'muted' : '')} style={{ width: `${currentVolume}%` }}></div>
           </div>
           <button onClick={() => handleButtonClick("VolumeUp")}><span className="plus-button"></span></button>
         </div>
       </div>
-      <button onClick={() => handleButtonClick("AmbilightOnOff")}>Ambilight Settings</button>
-      <AmbilightDropdown/>
+      <div className="bottom-row">
+        <button onClick={() => handleButtonClick("AmbilightOnOff")}><span className="light-button"></span></button>
+        <AmbilightDropdown/>
+        </div>
     </div>
   );
 };
 
 export default TVRemote;
+
