@@ -44,7 +44,7 @@ export class PhilipsAPI {
     // Fetch powerstate from TV
     return axios.get(url).then(
       (response) => {
-        return response?.data?.current;
+        return response?.data;
       }
     ).catch((error) => {
       return {status: 500, data: 'Failed to get volume, timout exceeded'};

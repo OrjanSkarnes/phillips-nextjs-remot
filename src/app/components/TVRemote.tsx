@@ -2,16 +2,18 @@
 
 import axios from "axios";
 import AmbilightDropdown from "./AmbilightDropdowns";
-import { useState } from "react";
+import {useState} from "react";
 
 const TVRemote = () => {
   const [currentVolume, setCurrentVolume] = useState<number>(0);
+  const [isMuted, setIsMuted] = useState<boolean>(false);
 
   async function handleButtonClick(command: string) {
     console.log(`Sending ${command} command to TV`);
-    const response = await axios.post(`/api/key`, { command });
+    const response = await axios.post(`/api/key`, {command});
     if (command === "VolumeUp" || command === "VolumeDown") {
       setCurrentVolume(response.data.volume);
+      setIsMuted(response.data.muted);
     }
   }
 
@@ -20,42 +22,46 @@ const TVRemote = () => {
   }
 
   async function swapSource(direction: string) {
-    await axios.post(`/api/source`, { direction });
+    await axios.post(`/api/source`, {direction});
   }
 
   return (
     <div className="tv-remote">
-        <button className="standby" onClick={() => handleButtonClick("Standby")}>Turn off</button>
-        
-        <div className="navigation-control">
-          <button onClick={() => handleButtonClick("CursorUp")}>Up</button>
-          <button onClick={() => handleButtonClick("CursorLeft")}>Left</button>
-          <button onClick={() => handleButtonClick("Confirm")}>Select</button>
-          <button onClick={() => handleButtonClick("CursorRight")}>Right</button>
-          <button onClick={() => handleButtonClick("CursorDown")}>Down</button>
-        </div>
+      <div className="top-container">
+        <button onClick={() => handleButtonClick("Standby")}><span className="power-button"></span></button>
 
-        <div className="home-back-control">
-          <button onClick={() => handleButtonClick("Back")}>Back</button>
-          <button onClick={() => handleButtonClick("Home")}>Home</button>
-        </div>
-
-        <div className="middle-row">
-        <div className="volume-control">
-          <button onClick={() => handleButtonClick("VolumeUp")}>Volume Up</button>
-          <progress value={currentVolume} max={60}></progress>
-      <button onClick={() => handleButtonClick("Mute")}>Mute</button>
-          <button onClick={() => handleButtonClick("VolumeDown")}>Volume Down</button>
-        </div>
-        
         <div className="source-control">
-          <button onClick={() => swapSource("left")}>Switch Source Left</button>
-          <button onClick={() => handleButtonClick("Source")}>Source</button>
-          <button onClick={() => swapSource("right")}>Switch Source Right</button>
+          <button onClick={() => swapSource("left")}><span className="prev-source-button"></span></button>
+          <button onClick={() => handleButtonClick("Source")}><span className="source-button"></span></button>
+          <button onClick={() => swapSource("right")}><span className="next-source-button"></span></button>
         </div>
+      </div>
+
+      <div className="navigation-control">
+        <button onClick={() => handleButtonClick("CursorUp")}><span className="up"></span></button>
+        <button onClick={() => handleButtonClick("CursorLeft")}><span className="left"></span></button>
+        <button onClick={() => handleButtonClick("Confirm")}></button>
+        <button onClick={() => handleButtonClick("CursorRight")}><span className="right"></span></button>
+        <button onClick={() => handleButtonClick("CursorDown")}><span className="down"></span></button>
+      </div>
+
+      <div className="home-back-control">
+        <button onClick={() => handleButtonClick("Back")}><span className="back-button"></span></button>
+        <button onClick={() => handleButtonClick("Home")}><span className="home-button"></span></button>
+        <button onClick={() => handleButtonClick("Options")}><span className="settings-button"></span></button>
+      </div>
+
+      <div className="middle-row">
+        <div className="volume-control">
+          <button onClick={() => handleButtonClick("VolumeDown")}><span className="minus-button"></span></button>
+          <div className="progress-bar">
+            <div className="progress" onClick={() => handleButtonClick("Mute")} style={{ width: `${currentVolume}%` }}></div>
+          </div>
+          <button onClick={() => handleButtonClick("VolumeUp")}><span className="plus-button"></span></button>
         </div>
-        <button onClick={() => handleButtonClick("AmbilightOnOff")}>Ambilight Settings</button>
-        <AmbilightDropdown />
+      </div>
+      <button onClick={() => handleButtonClick("AmbilightOnOff")}>Ambilight Settings</button>
+      <AmbilightDropdown/>
     </div>
   );
 };

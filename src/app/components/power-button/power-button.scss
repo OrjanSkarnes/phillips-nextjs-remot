@@ -1,0 +1,86 @@
+.power-button {
+  max-width: 60px;
+  max-height: 60px;
+  width: 100%;
+  height: 0;
+  min-width: 30px;
+  min-height: 30px;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-bottom: 40px;
+
+  &-shape1 {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: var(--button-background);
+    border-radius: 20%;
+    transition: background 0.1s ease;
+  }
+
+  &-shape2 {
+    position: absolute;
+    width: 80%;
+    height: 80%;
+    border-radius: 100%;
+    background: #FF0000;
+    transition: background 0.1s ease;
+  }
+
+  &-shape3 {
+    position: absolute;
+    width: 70%;
+    height: 70%;
+    top: 5%;
+    background: var(--button-background);
+    border-radius: 50%;
+    transform: rotate(44.32deg);
+    transition: background 0.1s ease;
+  }
+
+  &-shape4 {
+    position: absolute;
+    width: 8%;
+    height: 44%;
+    top: 16%;
+    background: #FF0000;
+    border-radius: 10px;
+    transition: background 0.1s ease;
+  }
+
+  &:hover {
+    .power-button-shape1 {
+      background: var(--button-background-hover);
+    }
+    .power-button-shape2 {
+      background: blue;
+    }
+    .power-button-shape3 {
+      background: var(--button-background-hover);
+    }
+    .power-button-shape4 {
+      background: blue;
+    }
+    transform: scale(1.05);
+  }
+
+  &:active {
+    .power-button-shape1 {
+      background: var(--button-background-hover);
+    }
+    .power-button-shape2 {
+      background: blue;
+    }
+    .power-button-shape3 {
+      background: var(--button-background-hover);
+    }
+    .power-button-shape4 {
+      background: blue;
+    }
+    transform: scale(1.1);
+  }
+}

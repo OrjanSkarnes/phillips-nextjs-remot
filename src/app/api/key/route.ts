@@ -14,14 +14,15 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
   const req = await request.json();
-  logger.info("Recieved command" + req.command);
-  if (req.command === "VolumeUp" || req.command === "VolumeDown") {
+  logger.info("Recieved command: " + req.command);
+  if (req.command === "VolumeUp" || req.command === "VolumeDown" || req.command === "Mute") {
     await philipsAPI.sendKey(req.command);
     return await philipsAPI
       .getCurrentVolume()
       .then((res) => {
-        logger.info("Volume set: " + res);
-        return NextResponse.json( { status: "OK", volume: res }, { status: 200 });
+        logger.info("Volume set: " + res.current);
+        logger.info("Is muted: " + res.muted)
+        return NextResponse.json( { status: "OK", volume: res.current, muted: res.muted }, { status: 200 });
       })
       .catch((error) => {
         logger.error("Failed to set volume" + error);
