@@ -148,7 +148,6 @@ const AmbilightDropdown: React.FC = () => {
 
 
   return (
-    <>  
     <select value={selectedOption} className="dropdown" onChange={handleChange}>
       {Object.keys(ambilightOptions).map((option) => (
         <option key={option} value={option} className="dropdown-content">
@@ -156,7 +155,6 @@ const AmbilightDropdown: React.FC = () => {
         </option>
       ))}
     </select>
-    </>
   );
 };
 
