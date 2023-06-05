@@ -37,9 +37,18 @@ This is a Next.js project that allows you to control your TV using a web-based r
     npm run dev
     ```
 
+### Configuration
+
+The application is configured using environment variables. You can either set these variables in a `.env` file in the project root, or set them as system environment variables.
+
+Set the following variables to configure the application:
+````
+TV_IP="YOUR_TV_IP_ADDRESS"
+````
+
 ## Usage
 
-Open [http://localhost:3000](http://localhost:3000) with your web browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) with your web browser to see the result. It is optimized for mobile devices, so you can add it to your home screen and use it as a native app.
 
 ## Run on startup
 

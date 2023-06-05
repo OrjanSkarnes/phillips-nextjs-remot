@@ -1,9 +1,9 @@
 import axios from "axios";
-import { Logger } from "./logger";
+import {Logger} from "./logger";
 
 export class PhilipsAPI {
-  private TV_IP = "10.0.0.1";
-  private TV_PORT = 1925;
+  private TV_IP = process.env.TV_IP // Is set in .env file
+  private TV_PORT = 1925 // Is either 1925(Non Android) or 1926 (Android)
   private logger: Logger;
 
   private maxAttempts = 3;
@@ -18,10 +18,9 @@ export class PhilipsAPI {
     const url = `http://${this.TV_IP}:${this.TV_PORT}/6/input/key`;
     const payload = { key };
     try {
-      const response = await axios.post(url, payload, {
+      return await axios.post(url, payload, {
         timeout: this.requestTimeout,
       });
-      return response;
     } catch (error: any) {
       return error?.response?.status;
     }
@@ -59,7 +58,6 @@ export class PhilipsAPI {
       menuSetting: setting,
     };
 
-    this.logger.debug(JSON.stringify(payload))
     this.logger.info(`Setting ambilight to ${style} ${setting}`);
     return await axios.post(url, payload, {
       timeout: this.requestTimeout,
