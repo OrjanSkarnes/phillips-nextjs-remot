@@ -11,6 +11,9 @@ This is a Next.js project that allows you to control your TV using a web-based r
 - Home and Back control: Access home screen or go back
 - Ambilight control: Control the TV's Ambilight feature
 
+### UI
+![img.png](img.png)
+
 ## Getting Started
 
 ### Prerequisites
