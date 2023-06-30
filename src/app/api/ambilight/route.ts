@@ -4,8 +4,17 @@ import {logger} from "@/app/api/logger";
 import {philipsAPI} from "@/app/api/philipsAPI";
 
 export async function GET(request: Request) {
-  return NextResponse.json({status: "OK"}, {
-    status: 200,
+  logger.info("GET /api/ambilight");
+  return await philipsAPI.getAmbilightConfiguration().then((res) => {
+    logger.info("Ambilight configuration fetched");
+    return NextResponse.json(res, {
+      status: 200,
+    });
+  }).catch((error) => {
+    logger.error("Failed to fetch ambilight configuration" + error);
+    return NextResponse.json({error: "Failed to fetch ambilight configuration"}, {
+      status: 500,
+    });
   });
 }
 
@@ -15,7 +24,7 @@ export async function POST(request: Request) {
   if (!!req.power) {
     logger.info("Setting power to " + req.power);
     return await philipsAPI.setAmbilightPower(req.power).then((res: any) => {
-      logger.info("Ambilight power set" + res.data);
+      logger.info("Ambilight power set to:" + req.power + res.data);
       return NextResponse.json({status: "OK"}, {
         status: 200,
       });
@@ -26,6 +35,7 @@ export async function POST(request: Request) {
       });
     });
   }
+
   return await philipsAPI.setAmbilight(req.styleName, req.menuSetting).then((res) => {
     logger.info("Ambilight set" + res.data);
     return NextResponse.json({status: "OK"}, {

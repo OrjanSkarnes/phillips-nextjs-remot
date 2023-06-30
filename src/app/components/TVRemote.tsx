@@ -16,7 +16,8 @@ const TVRemote = () => {
   async function handleButtonClick(command: string) {
     const response = await axios.post(`/api/key`, {command});
     if (command === "VolumeUp" || command === "VolumeDown" || command === "Mute") {
-      getVolume();
+      // Wait for the volume to change before updating the volume state
+      setTimeout(() => {getVolume();}, 500);
     }
   }
 

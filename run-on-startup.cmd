@@ -1,2 +1,2 @@
-cd C:\Dev\phillips-nextjs-remot
+cd D:\Dev\phillips-nextjs-remot
 npm run dev

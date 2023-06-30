@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useState } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import axios from "axios";
 
 type AmbilightSetting = {
@@ -128,11 +128,24 @@ const ambilightOptions: AmbilightOptions = {
 };
 
 const AmbilightDropdown: React.FC = () => {
-  const [selectedOption, setSelectedOption] = useState<string>("");
+  const [selectedOption, setSelectedOption] = useState<string | undefined>("");
+
+  // On startup, get the current volume and mute state
+  useEffect(() => {
+    getAmbilightMode();
+  }, []);
+
+  async function getAmbilightMode() {
+    const response = await axios.get(`/api/ambilight`);
+    // Set the selected option to the current ambilight mode find it in the ambilightOptions object
+    const currentAmbilightMode = Object.keys(ambilightOptions).find(
+      (key) => ambilightOptions[key].menuSetting === response.data.menuSetting && ambilightOptions[key].styleName === response.data.styleName
+    );
+    setSelectedOption(currentAmbilightMode);
+  }
 
   const handleChange = async (event: ChangeEvent<HTMLSelectElement>) => {
     setSelectedOption(event.target.value);
-
     const option: AmbilightSetting = ambilightOptions[event.target.value];
     if (option) {
       const response =  await axios.post(`/api/ambilight`, {

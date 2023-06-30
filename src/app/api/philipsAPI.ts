@@ -1,5 +1,6 @@
 import axios from "axios";
 import {Logger} from "./logger";
+const find = require('local-devices');
 
 export class PhilipsAPI {
   private TV_IP = process.env.TV_IP // Is set in .env file
@@ -13,6 +14,24 @@ export class PhilipsAPI {
     this.logger = new Logger();
   }
 
+  public async findTV() {
+    const devices = await find();
+    // Go through all devices and check if they get response from /powerstate
+    for (const device of devices) {
+      const url = `http://${device.ip}:${this.TV_PORT}/6/powerstate`;
+      try {
+        const response = await axios.get(url, {timeout: this.requestTimeout});
+        if (response.status === 200) {
+          this.TV_IP = device.ip;
+          this.logger.info(`Found TV at ${this.TV_IP}`);
+          return;
+        }
+      } catch (error: any) {
+        // Do nothing
+      }
+    }
+  }
+
   public async sendKey(key: string) {
     this.logger.info(`Sending key: ${key}`);
     const url = `http://${this.TV_IP}:${this.TV_PORT}/6/input/key`;
@@ -22,6 +41,7 @@ export class PhilipsAPI {
         timeout: this.requestTimeout,
       });
     } catch (error: any) {
+      this.findTV();
       return error?.response?.status;
     }
   }
@@ -34,7 +54,19 @@ export class PhilipsAPI {
         return response?.data?.powerstate;
       }
     ).catch((error) => {
+      // If we get a timeout, try to find tv on network
       return {status: 500, data: 'Failed to get powerstate, timout exceeded'};
+    });
+  }
+
+  public async getAmbilightConfiguration() {
+    const url = `http://${this.TV_IP}:${this.TV_PORT}/6/ambilight/currentconfiguration`;
+    return axios.get(url).then(
+      (response) => {
+        return response?.data;
+      }
+    ).catch((error) => {
+      return {status: 500, data: 'Failed to get ambilight configuration, timout exceeded'};
     });
   }
 
